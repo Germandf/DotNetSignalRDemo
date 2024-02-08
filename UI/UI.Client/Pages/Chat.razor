@@ -4,7 +4,7 @@
 
 <h3>Chat</h3>
 
-@if (IsConnected)
+@if (hubConnection?.State is HubConnectionState.Connected)
 {
     <form @onsubmit:preventDefault="true" @onsubmit="Send">
         <div class="form-group mb-3">
@@ -15,7 +15,7 @@
             <label class="form-label">Message:</label>
             <input class="form-control" @bind="messageInput" />
         </div>
-        <button type="submit" class="btn btn-primary" disabled="@(!IsConnected)">Send</button>
+        <button type="submit" class="btn btn-primary" disabled="@(false)">Send</button>
     </form>
 
     <ul class="list-group mt-3">
@@ -24,6 +24,10 @@
             <li class="list-group-item">@message</li>
         }
     </ul>
+}
+else if (hubConnection?.State is HubConnectionState.Disconnected)
+{
+    <p class="text-danger"><em>Disconnected: @errorMessage</em></p>
 }
 else
 {
@@ -36,9 +40,12 @@ else
     private List<string> messages = new();
     private string userInput = "";
     private string messageInput = "";
+    private string errorMessage = "";
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (firstRender is false) return;
+
         hubConnection = new HubConnectionBuilder()
             .WithUrl("https://localhost:7108/chatHub")
             .Build();
@@ -50,13 +57,20 @@ else
             StateHasChanged();
         });
 
-        await hubConnection.StartAsync();
+        try
+        {
+            await hubConnection.StartAsync();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+
+        StateHasChanged();
     }
 
     private Task Send() => hubConnection?.SendAsync("SendMessage", userInput, messageInput)
         .ContinueWith(_ => messageInput = "") ?? Task.CompletedTask;
-
-    public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
 
     public ValueTask DisposeAsync() => hubConnection?.DisposeAsync() ?? ValueTask.CompletedTask;
 }
