@@ -6,21 +6,28 @@
 
 @if (IsConnected)
 {
-    <div>
-        <input type="text" @bind="userInput" />
-        <input type="text" @bind="messageInput" />
-        <button @onclick="Send">Send</button>
-    </div>
-    <ul>
+    <form @onsubmit:preventDefault="true" @onsubmit="Send">
+        <div class="form-group mb-3">
+            <label class="form-label">User:</label>
+            <input class="form-control" @bind="userInput" />
+        </div>
+        <div class="form-group mb-3">
+            <label class="form-label">Message:</label>
+            <input class="form-control" @bind="messageInput" />
+        </div>
+        <button type="submit" class="btn btn-primary" disabled="@(!IsConnected)">Send</button>
+    </form>
+
+    <ul class="list-group mt-3">
         @foreach (var message in messages)
         {
-            <li>@message</li>
+            <li class="list-group-item">@message</li>
         }
     </ul>
 }
 else
 {
-    <p><em>Connecting...</em></p>
+    <p class="text-secondary"><em>Connecting...</em></p>
 }
 
 @code {
@@ -46,15 +53,10 @@ else
         await hubConnection.StartAsync();
     }
 
-    Task Send() => hubConnection?.SendAsync("SendMessage", userInput, messageInput).ContinueWith(_ => messageInput = "") ?? Task.CompletedTask;
+    private Task Send() => hubConnection?.SendAsync("SendMessage", userInput, messageInput)
+        .ContinueWith(_ => messageInput = "") ?? Task.CompletedTask;
 
-    public bool IsConnected => hubConnection is not null && hubConnection.State == HubConnectionState.Connected;
+    public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
 
-    public async ValueTask DisposeAsync()
-    {
-        if (hubConnection is not null)
-        {
-            await hubConnection.DisposeAsync();
-        }
-    }
+    public ValueTask DisposeAsync() => hubConnection?.DisposeAsync() ?? ValueTask.CompletedTask;
 }
