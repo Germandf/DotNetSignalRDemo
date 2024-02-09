@@ -48,6 +48,7 @@ else
 
         hubConnection = new HubConnectionBuilder()
             .WithUrl("https://localhost:7108/chatHub")
+            .WithAutomaticReconnect(new BoundedLinearRetryPolicy())
             .Build();
 
         hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
@@ -73,4 +74,10 @@ else
         .ContinueWith(_ => messageInput = "") ?? Task.CompletedTask;
 
     public ValueTask DisposeAsync() => hubConnection?.DisposeAsync() ?? ValueTask.CompletedTask;
+
+    public class BoundedLinearRetryPolicy : IRetryPolicy
+    {
+        public TimeSpan? NextRetryDelay(RetryContext retryContext) => 
+            TimeSpan.FromSeconds(Math.Min(5, retryContext.PreviousRetryCount));
+    }
 }
