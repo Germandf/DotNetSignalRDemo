@@ -60,7 +60,7 @@ else
 
         try
         {
-            await hubConnection.StartAsync();
+            await ConnectWithRetryAsync(hubConnection);
         }
         catch (Exception ex)
         {
@@ -68,6 +68,22 @@ else
         }
 
         StateHasChanged();
+    }
+
+    public static async Task ConnectWithRetryAsync(HubConnection connection)
+    {
+        while (true)
+        {
+            try
+            {
+                await connection.StartAsync();
+                return;
+            }
+            catch
+            {
+                await Task.Delay(5000);
+            }
+        }
     }
 
     private Task Send() => hubConnection?.SendAsync("SendMessage", userInput, messageInput)
