@@ -91,8 +91,18 @@ else
         }
     }
 
-    private Task Send() => hubConnection?.SendAsync("SendMessage", userInput, messageInput)
-        .ContinueWith(_ => messageInput = "") ?? Task.CompletedTask;
+    private async Task Send()
+    {
+        try
+        {
+            await hubConnection!.SendAsync("SendMessage", userInput, messageInput);
+            messageInput = "";
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
 
     public ValueTask DisposeAsync() => hubConnection?.DisposeAsync() ?? ValueTask.CompletedTask;
 
