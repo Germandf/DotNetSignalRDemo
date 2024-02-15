@@ -4,7 +4,6 @@ using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.AspNetCore.TestHost;
@@ -20,17 +19,7 @@ public class SignalRTests(WebApplicationFixture factory) : WebApplicationTestsBa
         var client = _factory.CreateClient();
         var url = new Uri(client.BaseAddress!, "chatHub");
         var hubConnection = new HubConnectionBuilder()
-            .WithUrl(url, options =>
-            {
-                options.SkipNegotiation = true;
-                options.Transports = HttpTransportType.WebSockets;
-                options.WebSocketFactory = (context, cancellationToken) =>
-                {
-                    var webSocketClient = _factory.Server.CreateWebSocketClient();
-                    var webSocket = webSocketClient.ConnectAsync(context.Uri, cancellationToken).GetAwaiter().GetResult();
-                    return ValueTask.FromResult(webSocket);
-                };
-            })
+            .WithUrl(url, o => o.HttpMessageHandlerFactory = _ => _factory.Server.CreateHandler())
             .Build();
         await hubConnection.StartAsync();
 
