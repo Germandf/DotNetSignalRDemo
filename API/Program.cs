@@ -9,9 +9,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
 builder.Services
     .AddSignalR()
-    .AddStackExchangeRedis("localhost:6379", options => {
+    .AddStackExchangeRedis(builder.Configuration.GetConnectionString("Redis"), options =>
+    {
         options.Configuration.ChannelPrefix = RedisChannel.Literal("DotNetSignalRDemo");
-        options.Configuration.AbortOnConnectFail = false;
     });
 
 var app = builder.Build();
@@ -25,3 +25,5 @@ app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin())
 app.MapHub<ChatHub>("/chatHub");
 
 app.Run();
+
+public partial class Program { }

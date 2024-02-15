@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI", "UI\UI\UI.csproj", "{A55DD079-FCB2-48C3-897A-C3B7DA412490}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI", "UI\UI\UI.csproj", "{A55DD079-FCB2-48C3-897A-C3B7DA412490}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.Client", "UI\UI.Client\UI.Client.csproj", "{B1478EB1-389B-4718-AFB9-9BF30F487EF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI.Client", "UI\UI.Client\UI.Client.csproj", "{B1478EB1-389B-4718-AFB9-9BF30F487EF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{D3549743-1AD3-4AC6-9FDF-23A8A0C9387A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "API\API.csproj", "{D3549743-1AD3-4AC6-9FDF-23A8A0C9387A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API.IntegrationTests", "API.IntegrationTests\API.IntegrationTests.csproj", "{939C4EDE-1C10-4C66-B611-DFEC42E39039}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{D3549743-1AD3-4AC6-9FDF-23A8A0C9387A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3549743-1AD3-4AC6-9FDF-23A8A0C9387A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3549743-1AD3-4AC6-9FDF-23A8A0C9387A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{939C4EDE-1C10-4C66-B611-DFEC42E39039}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{939C4EDE-1C10-4C66-B611-DFEC42E39039}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{939C4EDE-1C10-4C66-B611-DFEC42E39039}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{939C4EDE-1C10-4C66-B611-DFEC42E39039}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
