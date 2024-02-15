@@ -9,8 +9,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
 builder.Services
     .AddSignalR()
-    .AddStackExchangeRedis(builder.Configuration.GetConnectionString("Redis"), options =>
+    .AddStackExchangeRedis(options =>
     {
+        var redisConnectionString = builder.Configuration.GetConnectionString("Redis")!;
+        options.Configuration = ConfigurationOptions.Parse(redisConnectionString);
         options.Configuration.ChannelPrefix = RedisChannel.Literal("DotNetSignalRDemo");
     });
 
