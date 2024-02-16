@@ -1,4 +1,5 @@
 using API.Hubs;
+using API.Models;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,8 +12,8 @@ builder.Services
     .AddSignalR()
     .AddStackExchangeRedis(options =>
     {
-        var redisConnectionString = builder.Configuration.GetConnectionString("Redis")!;
-        options.Configuration = ConfigurationOptions.Parse(redisConnectionString);
+        var connectionString = builder.Configuration.GetConnectionString(ConnectionStrings.Redis)!;
+        options.Configuration = ConfigurationOptions.Parse(connectionString);
         options.Configuration.ChannelPrefix = RedisChannel.Literal("DotNetSignalRDemo");
     });
 

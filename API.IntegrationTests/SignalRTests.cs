@@ -1,3 +1,4 @@
+using API.Models;
 using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using DotNet.Testcontainers.Builders;
@@ -6,7 +7,6 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 
 namespace API.IntegrationTests;
@@ -69,15 +69,9 @@ public class WebApplicationFixture : WebApplicationFactory<Program>, IAsyncLifet
             var redisConnectionString = $"{_redisContainer.Hostname}:{_redisContainer.GetMappedPublicPort(6379)}";
             var integrationTestConfig = new Dictionary<string, string?>
             {
-                {"ConnectionStrings:Redis", redisConnectionString}
+                {$"{nameof(ConnectionStrings)}:{nameof(ConnectionStrings.Redis)}", redisConnectionString}
             };
-
             configBuilder.AddInMemoryCollection(integrationTestConfig);
-        });
-
-        builder.ConfigureTestServices(services =>
-        {
-
         });
     }
 
